@@ -11,6 +11,8 @@ Install fails with "App not installed" or "not compatible"? Your phone is an old
 
 ## 📲 How to install
 
+📖 **[Read the full User Guide (PDF, with screenshots)](docs/EasyCutMate-User-Guide.pdf)**: installing, your account, every editing tool, and getting videos from links (YouTube, TikTok and more) without a watermark.
+
 Use **Chrome**. Links opened inside WhatsApp, Messenger or Facebook often can't save app files: tap **⋮ → Open in Chrome** first.
 
 1. Tap the download link above.
