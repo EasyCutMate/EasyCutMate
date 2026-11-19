@@ -1,0 +1,39 @@
+name: Republish release
+
+# Re-creates an existing release (same tag, title, notes, files, latest/pre-release flags)
+# so it is published by github-actions.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  republish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Republish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+          R: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir files && cd files
+          gh release view "$TAG" -R "$R" --json name,body,isPrerelease > ../meta.json
+          gh release download "$TAG" -R "$R"
+          NAME=$(jq -r .name ../meta.json)
+          jq -r .body ../meta.json > ../notes.md
+          PRE=$(jq -r .isPrerelease ../meta.json)
+          LATEST=$(gh release view -R "$R" --json tagName -q .tagName)
+          args=(--title "$NAME" --notes-file ../notes.md --verify-tag)
+          if [ "$PRE" = "true" ]; then args+=(--prerelease); fi
+          if [ "$LATEST" = "$TAG" ]; then args+=(--latest); else args+=(--latest=false); fi
+          gh release delete "$TAG" -R "$R" --yes
+          gh release create "$TAG" -R "$R" "${args[@]}" ./*
+          gh release view "$TAG" -R "$R" --json tagName,author,assets -q '.tagName + " by " + .author.login + ", " + (.assets | length | tostring) + " files"'
