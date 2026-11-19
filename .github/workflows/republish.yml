@@ -1,7 +1,7 @@
 name: Republish release
 
 # Re-creates an existing release (same tag, title, notes, files, latest/pre-release flags)
-# so it is published by github-actions.
+# so it is published by github-actions. Run it on a draft to publish a new version as the latest.
 on:
   workflow_dispatch:
     inputs:
@@ -25,7 +25,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir files && cd files
-          gh release view "$TAG" -R "$R" --json name,body,isPrerelease > ../meta.json
+          gh release view "$TAG" -R "$R" --json name,body,isPrerelease,isDraft > ../meta.json
           gh release download "$TAG" -R "$R"
           NAME=$(jq -r .name ../meta.json)
           jq -r .body ../meta.json > ../notes.md
@@ -33,7 +33,9 @@ jobs:
           LATEST=$(gh release view -R "$R" --json tagName -q .tagName)
           args=(--title "$NAME" --notes-file ../notes.md --verify-tag)
           if [ "$PRE" = "true" ]; then args+=(--prerelease); fi
-          if [ "$LATEST" = "$TAG" ]; then args+=(--latest); else args+=(--latest=false); fi
+          # A draft = a new version being published now: it becomes the latest (unless it's a pre-release)
+          DRAFT=$(jq -r .isDraft ../meta.json)
+          if [ "$LATEST" = "$TAG" ] || { [ "$DRAFT" = "true" ] && [ "$PRE" != "true" ]; }; then args+=(--latest); else args+=(--latest=false); fi
           gh release delete "$TAG" -R "$R" --yes
           gh release create "$TAG" -R "$R" "${args[@]}" ./*
           gh release view "$TAG" -R "$R" --json tagName,author,assets -q '.tagName + " by " + .author.login + ", " + (.assets | length | tostring) + " files"'
