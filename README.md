@@ -30,7 +30,7 @@ Use **Chrome**. Links opened inside WhatsApp, Messenger or Facebook often can't 
 2. Tap the link in the email we send you (check Spam if it's not there).
 3. Your **3-day free trial** starts. You don't need to pay anything.
 
-After the trial, tap **Email support** in the app to get the full version. One-time payment, lifetime access.
+After the trial, tap **Email support** in the app to get the full version. One-time payment, no subscription. Guaranteed to work for 12 months, with a partial refund if it stops working in that time ([Terms of use](TERMS.md)).
 
 - Your account works on **one phone at a time**. New phone? Log in and tap **Use it on this phone instead** (once every 30 days). Lost or damaged phone? Contact support.
 - Already using an older version? Update, create your account once, and your trial or full version carries over.
@@ -39,4 +39,4 @@ After the trial, tap **Email support** in the app to get the full version. One-t
 
 iam1ofthedeveloper@gmail.com
 
-[Privacy policy](PRIVACY.md)
+[Terms of use](TERMS.md) · [Privacy policy](PRIVACY.md)
